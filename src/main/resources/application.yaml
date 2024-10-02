@@ -9,4 +9,4 @@ spring:
     hibernate:
       ddl-auto: update
 jwt:
-  secret: jsaovcbsahdbocsaubcdihabsocdbaocudsboacbdsciudsboaucibdsaociubsaicbsaoicbosa
+  secret: jsaovcbsahdbocsaubcdihabsocdbaocudsboacbdsciudsboaucibdsaociubsaicbsaoicbosabskhjabvchdsvapdsbcidsb
