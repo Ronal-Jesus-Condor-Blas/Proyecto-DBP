@@ -29,6 +29,6 @@ public class Comment {
     @Column(name = "fecha_comentario", nullable = false)
     private LocalDateTime commentDate;
 
-    // Constructor, Getters y Setters generados automáticamente por Lombok (@Data)
+
 }
 
