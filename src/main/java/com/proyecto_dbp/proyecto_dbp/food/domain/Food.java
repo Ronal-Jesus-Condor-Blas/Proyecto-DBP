@@ -6,7 +6,6 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
-
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -22,9 +21,9 @@ public class Food {
     @Size(max = 100)
     private String name;
 
-    private double cost;
+    private Double price;
 
-    private double averageRating;
+    private Double averageRating;
 
     private LocalDateTime createdDate;
 

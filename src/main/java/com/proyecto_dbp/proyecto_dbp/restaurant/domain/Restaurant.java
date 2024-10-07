@@ -1,6 +1,4 @@
 package com.proyecto_dbp.proyecto_dbp.restaurant.domain;
-
-
 import com.proyecto_dbp.proyecto_dbp.food.domain.Food;
 import com.proyecto_dbp.proyecto_dbp.restaurantrating.domain.RestaurantRating;
 import com.proyecto_dbp.proyecto_dbp.typefood.domain.TypeFood;
@@ -20,27 +18,20 @@ public class Restaurant {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long restaurantId;
-
     @NotNull
     @Size(max = 100)
     private String name;
-
     @NotNull
     private String location;
 
-    private double averageRating;
-
+    private Double averageRating;
     private LocalDateTime createdDate;
-
     @Enumerated(EnumType.STRING)
     private RestaurantStatus status;  // Enum para el estado del restaurante (abierto/cerrado)
-
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
-    private List<Food> foods;  // Un restaurante ofrece varios platos
-
+    private Set<Food> foods;  // Un restaurante ofrece varios platos
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
-    private List<RestaurantRating> ratings;  // Un restaurante puede recibir varias calificaciones
-
+    private Set<RestaurantRating> ratings;  // Un restaurante puede recibir varias calificaciones
     @ManyToMany
     @JoinTable(
             name = "restaurant_type_food",

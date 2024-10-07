@@ -20,20 +20,16 @@ public class RestaurantRating {
     private Long restaurantRatingId;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)  // Clave foránea hacia User
-    private User user;  // Una calificación es hecha por un usuario
-
-    @ManyToOne
-    @JoinColumn(name = "restaurant_id", nullable = false)  // Clave foránea hacia Restaurant
-    private Restaurant restaurant;  // Una calificación está asociada a un restaurante
+    private User user;
 
     @NotNull
     @Min(1)
     @Max(5)
-    private int rating;  // Calificación de 1 a 5 estrellas
+    private Integer rating;  // Calificación de 1 a 5 estrellas
 
     private String comment;  // Comentario opcional
 
     private LocalDateTime ratingDate;  // Fecha en la que se realizó la calificación
+
 }
 

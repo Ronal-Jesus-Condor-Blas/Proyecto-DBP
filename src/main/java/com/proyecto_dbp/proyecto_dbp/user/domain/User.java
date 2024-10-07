@@ -1,8 +1,9 @@
 package com.proyecto_dbp.proyecto_dbp.user.domain;
 
 import com.proyecto_dbp.proyecto_dbp.comment.domain.Comment;
-import com.proyecto_dbp.proyecto_dbp.followers.domain.Followers;
+import com.proyecto_dbp.proyecto_dbp.foodrating.domain.FoodRating;
 import com.proyecto_dbp.proyecto_dbp.post.domain.Post;
+import com.proyecto_dbp.proyecto_dbp.restaurantrating.domain.RestaurantRating;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
@@ -10,48 +11,41 @@ import jakarta.validation.constraints.Size;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 public class User {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
-
     @NotNull
     @Size(max = 100)
     private String name;
-
     @NotNull
     @Email
     private String email;
-
     @NotNull
     private String password;
-
     private String profilePicture;
-
     private String bio;
-
     @Enumerated(EnumType.STRING)
     private UserType userType; // Tipo de usuario (consumidor/influencer)
-
     private LocalDateTime registrationDate;
-
-    @Enumerated(EnumType.STRING)
-    private UserStatus status;  // Estado del usuario (activo/inactivo/bloqueado)
-
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<Post> posts;  // Un usuario puede crear muchos posts
-
+    private Set<Post> posts;  // Un usuario puede crear muchos posts
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<Comment> comments;  // Un usuario puede hacer muchos comentarios
-
-    @OneToMany(mappedBy = "follower", cascade = CascadeType.ALL)
-    private List<Followers> following;  // Un usuario sigue a otros usuarios
-
-    @OneToMany(mappedBy = "followed", cascade = CascadeType.ALL)
-    private List<Followers> followers;  // Un usuario es seguido por otros
-
-    // Getters and Setters
+    private Set<Comment> comments;  // Un usuario puede hacer muchos comentarios
+    @ManyToMany
+    @JoinTable(
+            name = "user_follows",
+            joinColumns = @JoinColumn(name = "follower_id"),
+            inverseJoinColumns = @JoinColumn(name = "followed_id")
+    )
+    private Set<User> followers;  // Relación de seguidores y seguidos
+    @ManyToMany(mappedBy = "likedBy")
+    private Set<Post> likedPosts; // Aquí añadimos los posts que el usuario ha dado like
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private Set<FoodRating> foodRatings; // Un usuario puede calificar muchos platos
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private Set<RestaurantRating> restaurantRatings; // Un usuario puede calificar muchos restaurantes
 }

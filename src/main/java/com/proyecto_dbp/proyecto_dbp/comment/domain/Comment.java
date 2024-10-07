@@ -27,7 +27,4 @@ public class Comment {
     private String content;
 
     private LocalDateTime commentDate;
-
-    @Enumerated(EnumType.STRING)
-    private CommentStatus status;  // Estado del comentario (activo/eliminado)
 }
