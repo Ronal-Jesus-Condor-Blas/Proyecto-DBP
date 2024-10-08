@@ -1,6 +1,6 @@
-package com.proyecto_dbp.proyecto_dbp.auth.application.services;
+package com.proyecto_dbp.proyecto_dbp.auth.domain;
 
-import com.proyecto_dbp.proyecto_dbp.auth.domain.responses.TokenResponse;
+import com.proyecto_dbp.proyecto_dbp.auth.dtos.responses.TokenResponse;
 import io.jsonwebtoken.Claims;
 
 public interface JwtService {

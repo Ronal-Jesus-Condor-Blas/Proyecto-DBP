@@ -1,4 +1,4 @@
-package com.proyecto_dbp.proyecto_dbp.auth.application.services.impl;
+package com.proyecto_dbp.proyecto_dbp.auth.domain.impl;
 
 import com.proyecto_dbp.proyecto_dbp.auth.infrastructure.repositories.AuthRepository;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,8 +15,8 @@ public class UserDetailsImpl implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return authRepository.findByEmail(username)
+    public UserDetails loadUserByUsername(String name) throws UsernameNotFoundException {
+        return authRepository.findByEmail(name)
                 .orElseThrow(() -> new RuntimeException("UserDetailsService user not found"));
     }
 }

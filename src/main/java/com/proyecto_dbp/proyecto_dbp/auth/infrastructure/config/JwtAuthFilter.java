@@ -1,8 +1,8 @@
 package com.proyecto_dbp.proyecto_dbp.auth.infrastructure.config;
 
-import com.proyecto_dbp.proyecto_dbp.auth.application.services.JwtService;
-import com.proyecto_dbp.proyecto_dbp.auth.infrastructure.entities.UserModel;
+import com.proyecto_dbp.proyecto_dbp.auth.domain.JwtService;
 import com.proyecto_dbp.proyecto_dbp.auth.infrastructure.repositories.AuthRepository;
+import com.proyecto_dbp.proyecto_dbp.user.domain.User;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -42,7 +42,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     }
 
-    private void processAuthentication(HttpServletRequest request, UserModel userDetails) {
+    private void processAuthentication(HttpServletRequest request, User userDetails) {
         String jwtToken = request.getHeader("Authentication").substring(7);
         Optional.of(jwtToken)
                 .filter(token -> !jwtService.isExpired(token))

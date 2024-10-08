@@ -1,12 +1,12 @@
-package com.proyecto_dbp.proyecto_dbp.auth.application.services.impl;
+package com.proyecto_dbp.proyecto_dbp.auth.domain.impl;
 
-import com.proyecto_dbp.proyecto_dbp.auth.application.services.AuthService;
-import com.proyecto_dbp.proyecto_dbp.auth.application.services.JwtService;
-import com.proyecto_dbp.proyecto_dbp.auth.domain.request.LoginRequest;
-import com.proyecto_dbp.proyecto_dbp.auth.domain.request.UserRequest;
-import com.proyecto_dbp.proyecto_dbp.auth.domain.responses.TokenResponse;
-import com.proyecto_dbp.proyecto_dbp.auth.infrastructure.entities.UserModel;
+import com.proyecto_dbp.proyecto_dbp.auth.domain.AuthService;
+import com.proyecto_dbp.proyecto_dbp.auth.domain.JwtService;
+import com.proyecto_dbp.proyecto_dbp.auth.dtos.request.LoginRequest;
+import com.proyecto_dbp.proyecto_dbp.auth.dtos.request.UserRequest;
+import com.proyecto_dbp.proyecto_dbp.auth.dtos.responses.TokenResponse;
 import com.proyecto_dbp.proyecto_dbp.auth.infrastructure.repositories.AuthRepository;
+import com.proyecto_dbp.proyecto_dbp.user.domain.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -38,17 +38,17 @@ public class AuthServiceImpl implements AuthService {
     public TokenResponse loginUser(LoginRequest loginRequest) {
         return authRepository.findByEmail(loginRequest.getEmail())
                 .filter(user -> passwordEncoder.matches(loginRequest.getPassword(), user.getPassword()))
-                .map(UserModel::getUserId)
+                .map(User::getUserId)
                 .map(jwtService::generateToken)
                 .orElseThrow(() -> new RuntimeException("Invalid credentials"));
     }
 
-    private UserModel mapToEntity(UserRequest userRequest) {
-        return UserModel.builder()
-                .email(userRequest.getEmail())
-                .password(userRequest.getPassword())
-                .name(userRequest.getName())
-                .role("USER")
-                .build();
-    }
+    private User mapToEntity(UserRequest userRequest) {
+    return User.builder()
+            .email(userRequest.getEmail())
+            .password(userRequest.getPassword())
+            .name(userRequest.getName())
+            .userType(userRequest.getUserType())
+            .build();
+}
 }

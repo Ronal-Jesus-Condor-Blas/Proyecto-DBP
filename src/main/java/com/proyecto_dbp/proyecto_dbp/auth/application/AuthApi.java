@@ -1,9 +1,9 @@
-package com.proyecto_dbp.proyecto_dbp.auth.infrastructure.controllers;
+package com.proyecto_dbp.proyecto_dbp.auth.application;
 
-import com.proyecto_dbp.proyecto_dbp.auth.domain.constants.ApiPathConstants;
-import com.proyecto_dbp.proyecto_dbp.auth.domain.request.LoginRequest;
-import com.proyecto_dbp.proyecto_dbp.auth.domain.request.UserRequest;
-import com.proyecto_dbp.proyecto_dbp.auth.domain.responses.TokenResponse;
+import com.proyecto_dbp.proyecto_dbp.auth.dtos.request.LoginRequest;
+import com.proyecto_dbp.proyecto_dbp.auth.dtos.request.UserRequest;
+import com.proyecto_dbp.proyecto_dbp.auth.dtos.responses.TokenResponse;
+import com.proyecto_dbp.proyecto_dbp.common.ApiPathConstants;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

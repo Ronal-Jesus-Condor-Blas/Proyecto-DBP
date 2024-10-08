@@ -1,10 +1,10 @@
-package com.proyecto_dbp.proyecto_dbp.auth.infrastructure.controllers.impl;
+package com.proyecto_dbp.proyecto_dbp.auth.application.impl;
 
-import com.proyecto_dbp.proyecto_dbp.auth.application.services.AuthService;
-import com.proyecto_dbp.proyecto_dbp.auth.domain.request.LoginRequest;
-import com.proyecto_dbp.proyecto_dbp.auth.domain.request.UserRequest;
-import com.proyecto_dbp.proyecto_dbp.auth.domain.responses.TokenResponse;
-import com.proyecto_dbp.proyecto_dbp.auth.infrastructure.controllers.AuthApi;
+import com.proyecto_dbp.proyecto_dbp.auth.domain.AuthService;
+import com.proyecto_dbp.proyecto_dbp.auth.dtos.request.LoginRequest;
+import com.proyecto_dbp.proyecto_dbp.auth.dtos.request.UserRequest;
+import com.proyecto_dbp.proyecto_dbp.auth.dtos.responses.TokenResponse;
+import com.proyecto_dbp.proyecto_dbp.auth.application.AuthApi;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 

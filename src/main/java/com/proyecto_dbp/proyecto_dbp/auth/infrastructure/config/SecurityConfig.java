@@ -1,6 +1,6 @@
 package com.proyecto_dbp.proyecto_dbp.auth.infrastructure.config;
 
-import com.proyecto_dbp.proyecto_dbp.auth.application.services.impl.UserDetailsImpl;
+import com.proyecto_dbp.proyecto_dbp.auth.domain.impl.UserDetailsImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;

@@ -1,4 +1,4 @@
-package com.proyecto_dbp.proyecto_dbp.auth.domain.responses;
+package com.proyecto_dbp.proyecto_dbp.auth.dtos.responses;
 
 import lombok.*;
 

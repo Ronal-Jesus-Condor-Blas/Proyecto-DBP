@@ -1,7 +1,7 @@
-package com.proyecto_dbp.proyecto_dbp.auth.application.services.impl;
+package com.proyecto_dbp.proyecto_dbp.auth.domain.impl;
 
-import com.proyecto_dbp.proyecto_dbp.auth.application.services.JwtService;
-import com.proyecto_dbp.proyecto_dbp.auth.domain.responses.TokenResponse;
+import com.proyecto_dbp.proyecto_dbp.auth.domain.JwtService;
+import com.proyecto_dbp.proyecto_dbp.auth.dtos.responses.TokenResponse;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

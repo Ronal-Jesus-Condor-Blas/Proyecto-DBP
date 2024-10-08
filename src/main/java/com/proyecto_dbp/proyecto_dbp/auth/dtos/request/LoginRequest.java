@@ -1,4 +1,4 @@
-package com.proyecto_dbp.proyecto_dbp.auth.domain.request;
+package com.proyecto_dbp.proyecto_dbp.auth.dtos.request;
 
 import lombok.*;
 import org.antlr.v4.runtime.misc.NotNull;

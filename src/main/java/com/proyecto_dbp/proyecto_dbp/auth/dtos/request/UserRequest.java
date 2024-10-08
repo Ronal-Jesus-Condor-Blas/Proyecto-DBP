@@ -1,5 +1,6 @@
-package com.proyecto_dbp.proyecto_dbp.auth.domain.request;
+package com.proyecto_dbp.proyecto_dbp.auth.dtos.request;
 
+import com.proyecto_dbp.proyecto_dbp.user.domain.UserType;
 import lombok.*;
 import org.antlr.v4.runtime.misc.NotNull;
 
@@ -15,4 +16,6 @@ public class UserRequest {
     private String email;
     @NotNull
     private String password;
+    @NotNull
+    private UserType userType;
 }
