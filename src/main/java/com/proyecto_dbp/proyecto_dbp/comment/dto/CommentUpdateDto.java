@@ -1,6 +1,5 @@
 package com.proyecto_dbp.proyecto_dbp.comment.dto;
 
-import com.proyecto_dbp.proyecto_dbp.post.domain.Post;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
@@ -9,9 +8,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class CommentResponseDto {
-    @NotNull
-    private Post post;
+public class CommentUpdateDto {
     @NotNull
     private String content;
 }
