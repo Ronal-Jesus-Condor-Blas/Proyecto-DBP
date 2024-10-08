@@ -19,7 +19,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
     @NotNull
-    @Size(max = 100)
+    @Size(max = 50)
     private String name;
     @NotNull
     @Email
@@ -27,10 +27,10 @@ public class User {
     @NotNull
     private String password;
     private String profilePicture;
-    private String bio;
+    private String biography;
     @Enumerated(EnumType.STRING)
     private UserType userType; // Tipo de usuario (consumidor/influencer)
-    private LocalDateTime registrationDate;
+    private LocalDateTime registerDate;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private Set<Post> posts;  // Un usuario puede crear muchos posts
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)

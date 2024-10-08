@@ -6,6 +6,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -25,9 +26,9 @@ public class UserModel implements UserDetails {
     private String name;
     private String email;
     private String password;
-    private String photo;
+    private String profilePicture;
     private String biography;
-    private Date registerDate;
+    private LocalDateTime registerDate;
     private String role;
 
     @Override
