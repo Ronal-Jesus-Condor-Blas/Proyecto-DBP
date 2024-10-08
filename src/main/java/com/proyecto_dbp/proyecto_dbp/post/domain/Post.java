@@ -13,16 +13,17 @@ public class Post {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long postId;
+    private Long postId; // Identificador del post
+
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)  // Clave foránea hacia User
-    private User user;  // Un post es creado por un usuario
+    private User user;  // Un post es hecho por un usuario
 
-    private String image;
+    private String image; // Imagen del post
 
-    private String content;
+    private String content; // Contenido del post
 
-    private LocalDateTime createdDate;
+    private LocalDateTime createdDate; // Fecha y hora en la que se creó el post
 
     @Enumerated(EnumType.STRING)
     private PostStatus status;  // Estado del post (activo/eliminado)
@@ -35,6 +36,7 @@ public class Post {
             name = "post_likes",
             joinColumns = @JoinColumn(name = "post_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")
-    )
-    private Set<User> likedBy; // Usuarios que han dado like a este post
+    ) // Tabla intermedia para la relación muchos a muchos entre Post y User
+
+    private Set<User> likedBy;  // Un post puede ser gustado por muchos usuarios
 }

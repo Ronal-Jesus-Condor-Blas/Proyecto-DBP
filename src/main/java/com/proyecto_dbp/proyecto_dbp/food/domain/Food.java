@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -15,17 +16,17 @@ public class Food {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long foodId;
+    private Long foodId; // Identificador único del plato
 
     @NotNull
     @Size(max = 100)
-    private String name;
+    private String name; // Nombre del plato
 
-    private Double price;
+    private Double price; // Precio del plato
 
-    private Double averageRating;
+    private Double averageRating; // Calificación promedio del plato
 
-    private LocalDateTime createdDate;
+    private LocalDateTime createdDate; // Fecha de creación del plato
 
     @Enumerated(EnumType.STRING)
     private FoodStatus status;  // Enum para el estado del plato (disponible/no disponible)

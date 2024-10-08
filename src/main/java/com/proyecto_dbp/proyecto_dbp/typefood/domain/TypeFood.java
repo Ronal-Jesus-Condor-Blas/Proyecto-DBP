@@ -11,10 +11,10 @@ public class TypeFood {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long typeFoodId;
+    private Long typeFoodId; // Identificador único del tipo de comida
 
     @NotNull
     @Size(max = 100)
     private String type; // Tipo de comida (e.g. italiana, mexicana, peruana)
-    // Getters and Setters
+
 }

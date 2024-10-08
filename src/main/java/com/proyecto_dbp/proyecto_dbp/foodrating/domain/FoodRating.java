@@ -17,15 +17,15 @@ public class FoodRating {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long foodRatingId;
+    private Long foodRatingId; // Identificador único de la calificación
 
     @ManyToOne
     @JoinColumn(name = "food_id", nullable = false)  // Clave foránea hacia Food
     private Food food;  // Una calificación pertenece a un plato específico
 
-    private String comment;
+    private String comment; // Comentario de la calificación
 
-    private LocalDateTime ratingDate;
+    private LocalDateTime ratingDate; // Fecha de la calificación
 
     @NotNull
     @Min(1)
@@ -33,6 +33,6 @@ public class FoodRating {
     private Integer rating;  // Calificación de 1 a 5 estrellas
 
     @ManyToOne
-    private User user;
+    private User user; // Calificación hecha por un usuario
 
 }

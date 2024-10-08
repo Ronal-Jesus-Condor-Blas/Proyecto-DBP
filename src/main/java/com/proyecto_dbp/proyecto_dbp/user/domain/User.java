@@ -10,42 +10,55 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Set;
 
 @Entity
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userId;
+    private Long userId; // Identificador único del usuario
+
     @NotNull
     @Size(max = 50)
-    private String name;
+    private String name; // Nombre del usuario
+
     @NotNull
     @Email
-    private String email;
+    private String email; // Correo electrónico del usuario
+
     @NotNull
-    private String password;
-    private String profilePicture;
-    private String biography;
+    private String password; // Contraseña del usuario
+
+    private String profilePicture; // URL de la foto de perfil
+
+    private String biography; // Biografía del usuario
+
     @Enumerated(EnumType.STRING)
     private UserType userType; // Tipo de usuario (consumidor/influencer)
-    private LocalDateTime registerDate;
+
+    private LocalDateTime registerDate; // Fecha y hora de registro
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private Set<Post> posts;  // Un usuario puede crear muchos posts
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private Set<Comment> comments;  // Un usuario puede hacer muchos comentarios
+
     @ManyToMany
     @JoinTable(
             name = "user_follows",
             joinColumns = @JoinColumn(name = "follower_id"),
             inverseJoinColumns = @JoinColumn(name = "followed_id")
-    )
-    private Set<User> followers;  // Relación de seguidores y seguidos
+    ) // Tabla intermedia para la relación muchos a muchos entre User y User
+
+    private Set<User> followers;  // Usuarios que siguen a este usuario
+
     @ManyToMany(mappedBy = "likedBy")
-    private Set<Post> likedPosts; // Aquí añadimos los posts que el usuario ha dado like
+    private Set<Post> likedPosts; // Posts que le gustan a este usuario
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private Set<FoodRating> foodRatings; // Un usuario puede calificar muchos platos
+    private Set<FoodRating> foodRatings;  // Un usuario puede calificar muchos platos
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private Set<RestaurantRating> restaurantRatings; // Un usuario puede calificar muchos restaurantes
+    private Set<RestaurantRating> restaurantRatings;  // Un usuario puede calificar muchos restaurantes
 }

@@ -1,6 +1,7 @@
 package com.proyecto_dbp.proyecto_dbp.comment.domain;
 
 import java.time.LocalDateTime;
+
 import com.proyecto_dbp.proyecto_dbp.post.domain.Post;
 import com.proyecto_dbp.proyecto_dbp.user.domain.User;
 import jakarta.persistence.*;
@@ -13,7 +14,7 @@ public class Comment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long commentId;
+    private Long commentId; // Identificador único del comentario
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)  // Clave foránea hacia User
@@ -24,7 +25,7 @@ public class Comment {
     private Post post;  // Un comentario pertenece a un post
 
     @NotNull
-    private String content;
+    private String content; // Contenido del comentario
 
-    private LocalDateTime commentDate;
+    private LocalDateTime commentDate;  // Fecha y hora en la que se hizo el comentario
 }

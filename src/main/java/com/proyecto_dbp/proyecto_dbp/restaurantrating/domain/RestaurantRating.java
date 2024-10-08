@@ -17,10 +17,10 @@ public class RestaurantRating {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long restaurantRatingId;
+    private Long restaurantRatingId; // Identificador único de la calificación
 
     @ManyToOne
-    private User user;
+    private User user; // Calificación hecha por un usuario
 
     @NotNull
     @Min(1)
