@@ -31,5 +31,9 @@ public class RestaurantRating {
 
     private LocalDateTime ratingDate;  // Fecha en la que se realizó la calificación
 
+    @ManyToOne
+    @JoinColumn(name = "restaurant_id", nullable = false)
+    private Restaurant restaurant; // Calificación hecha a un restaurante
+
 }
 

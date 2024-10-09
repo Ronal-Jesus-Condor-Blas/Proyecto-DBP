@@ -8,6 +8,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Set;
 
 @Entity
@@ -29,8 +30,9 @@ public class Restaurant {
 
     private LocalDateTime createdDate; // Fecha de creación del restaurante
 
-    @Enumerated(EnumType.STRING)
-    private RestaurantStatus status;  // Enum para el estado del restaurante (abierto/cerrado)
+    private LocalTime openingTime;  // Hora de apertura
+
+    private LocalTime closingTime;  // Hora de cierre
 
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
     private Set<Food> foods;  // Un restaurante ofrece varios platos
@@ -42,7 +44,7 @@ public class Restaurant {
     @JoinTable(
             name = "restaurant_type_food",
             joinColumns = @JoinColumn(name = "restaurant_id"),
-            inverseJoinColumns = @JoinColumn(name = "type_food_id")
+            inverseJoinColumns = @JoinColumn(name = "typefood_id")
     ) // Tabla intermedia para la relación muchos a muchos
 
     private Set<TypeFood> typesOfFood;  // Un restaurante ofrece varios tipos de cocina

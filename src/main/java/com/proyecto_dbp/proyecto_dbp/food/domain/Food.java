@@ -22,6 +22,7 @@ public class Food {
     @Size(max = 100)
     private String name; // Nombre del plato
 
+    @NotNull
     private Double price; // Precio del plato
 
     private Double averageRating; // Calificación promedio del plato
