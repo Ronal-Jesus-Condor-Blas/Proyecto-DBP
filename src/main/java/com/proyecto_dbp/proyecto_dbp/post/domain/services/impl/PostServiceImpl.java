@@ -1,61 +1,76 @@
 package com.proyecto_dbp.proyecto_dbp.post.domain.services.impl;
 
-
+import com.proyecto_dbp.proyecto_dbp.comment.domain.Comment;
 import com.proyecto_dbp.proyecto_dbp.post.domain.Post;
 import com.proyecto_dbp.proyecto_dbp.post.domain.services.PostService;
+import com.proyecto_dbp.proyecto_dbp.post.dto.PostCreateDto;
+import com.proyecto_dbp.proyecto_dbp.post.dto.PostUpdateDto;
 import com.proyecto_dbp.proyecto_dbp.post.infrastructure.PostRepository;
-import jakarta.validation.OverridesAttribute;
+import com.proyecto_dbp.proyecto_dbp.user.domain.User;
+import com.proyecto_dbp.proyecto_dbp.user.infrastructure.UserRepository;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 public class PostServiceImpl implements PostService {
     private final PostRepository postRepository;
+    private final UserRepository userRepository;
 
-    public PostServiceImpl(PostRepository postRepository) {
+    public PostServiceImpl(PostRepository postRepository, UserRepository userRepository) {
         this.postRepository = postRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
     public Post getPost(Long postId) {
-        return Optional.of(postId)
-                .flatMap(postRepository::findById)
+        return postRepository.findById(postId)
                 .orElseThrow(() -> new RuntimeException("Post not found"));
     }
 
     @Override
     public void updatePost(Long postId, PostUpdateDto postUpdateDto) {
-        Optional.of(postId)
-                .map(this::getPostByPostId)
-                .map(existPost -> updateFieldsPost(existPost, postUpdateDto))
-                .map(postRepository::save)
-                .orElseThrow(() -> new RuntimeException("Error couldn't update post"));
+        Post post = getPost(postId);
+        post.setTitle(postUpdateDto.getTitle());
+        post.setContent(postUpdateDto.getContent());
+        postRepository.save(post);
     }
 
     @Override
     public void deletePost(Long postId) {
-        Optional.of(postId)
-                .map(this::getPostByPostId)
-                .ifPresent(postRepository::delete);
+        Post post = getPost(postId);
+        postRepository.delete(post);
     }
 
     @Override
     public void createPost(PostCreateDto postCreateDto) {
-        postRepository.save(Post.builder()
-                .title(postCreateDto.getTitle())
-                .content(postCreateDto.getContent())
-                .build());
+        Post post = new Post();
+        post.setTitle(postCreateDto.getTitle());
+        post.setContent(postCreateDto.getContent());
+        postRepository.save(post);
     }
 
-    private Post getPostByPostId(Long postId) {
-        return postRepository.findById(postId)
-                .orElseThrow(() -> new RuntimeException("Post not found"));
+    @Override
+    public void likePost(Long postId, Long userId) {
+        Post post = getPost(postId);
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        post.incrementLikes(user);
+        postRepository.save(post);
     }
 
-    private Post updateFieldsPost(Post existPost, PostUpdateDto postUpdateDto) {
-        existPost.setTitle(postUpdateDto.getTitle());
-        existPost.setContent(postUpdateDto.getContent());
-        return existPost;
+    @Override
+    public void dislikePost(Long postId, Long userId) {
+        Post post = getPost(postId);
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        post.decrementLikes(user);
+        postRepository.save(post);
     }
+
+    @Override
+    public void commentPost(Long postId, Comment comment) {
+        Post post = getPost(postId);
+        post.incrementComments(comment);
+        postRepository.save(post);
+    }
+
 }

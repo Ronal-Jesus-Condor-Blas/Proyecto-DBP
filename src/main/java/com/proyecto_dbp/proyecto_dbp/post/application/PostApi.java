@@ -1,6 +1,6 @@
 package com.proyecto_dbp.proyecto_dbp.post.application;
 
-
+import com.proyecto_dbp.proyecto_dbp.comment.domain.Comment;
 import com.proyecto_dbp.proyecto_dbp.common.ApiPathConstants;
 import com.proyecto_dbp.proyecto_dbp.post.domain.Post;
 import com.proyecto_dbp.proyecto_dbp.post.dto.PostCreateDto;
@@ -35,8 +35,20 @@ public interface PostApi {
             @Valid @RequestBody PostCreateDto postCreateDto
     );
 
-    @PutMapping
+    @PutMapping("/like")
     ResponseEntity<Void> likePost(
-            @RequestAttribute("X-Post-Id") Long postId
+            @RequestAttribute("X-Post-Id") Long postId,
+            @RequestAttribute("X-User-Id") Long userId
     );
+
+    @PutMapping("/dislike")
+    ResponseEntity<Void> dislikePost(
+            @RequestAttribute("X-Post-Id") Long postId,
+            @RequestAttribute("X-User-Id") Long userId
+    );
+
+    @PutMapping("/comment")
+    ResponseEntity<Void> commentPost(Long postId, Comment comment);
+
+
 }
