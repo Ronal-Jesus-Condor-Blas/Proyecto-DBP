@@ -1,6 +1,7 @@
 package com.proyecto_dbp.proyecto_dbp.food.domain.services.impl;
 
 import com.proyecto_dbp.proyecto_dbp.food.domain.Food;
+import com.proyecto_dbp.proyecto_dbp.food.domain.FoodStatus;
 import com.proyecto_dbp.proyecto_dbp.food.domain.services.FoodService;
 import com.proyecto_dbp.proyecto_dbp.food.dto.FoodCreateDto;
 import com.proyecto_dbp.proyecto_dbp.food.dto.FoodDto;
@@ -28,7 +29,7 @@ public class FoodServiceImpl implements FoodService {
         Food food = new Food();
         food.setName(foodCreateDto.getName());
         food.setPrice(foodCreateDto.getPrice());
-        food.setStatus(foodCreateDto.getStatus());
+        food.setStatus(FoodStatus.valueOf(foodCreateDto.getStatus()));
         food.setCreatedDate(LocalDateTime.now());
         food.setRestaurant(restaurantRepository.findById(foodCreateDto.getRestaurantId())
                 .orElseThrow(() -> new RuntimeException("Restaurant not found")));
@@ -56,7 +57,7 @@ public class FoodServiceImpl implements FoodService {
                 .orElseThrow(() -> new RuntimeException("Food not found"));
         food.setName(foodUpdateDto.getName());
         food.setPrice(foodUpdateDto.getPrice());
-        food.setStatus(foodUpdateDto.getStatus());
+        food.setStatus(FoodStatus.valueOf(foodUpdateDto.getStatus()));
         food.setAverageRating(foodUpdateDto.getAverageRating());
         Food updatedFood = foodRepository.save(food);
         return mapToDto(updatedFood);
@@ -74,7 +75,7 @@ public class FoodServiceImpl implements FoodService {
         foodDto.setFoodId(food.getFoodId());
         foodDto.setName(food.getName());
         foodDto.setPrice(food.getPrice());
-        foodDto.setStatus(food.getStatus());
+        foodDto.setStatus(String.valueOf(food.getStatus()));
         foodDto.setAverageRating(food.getAverageRating());
         foodDto.setCreatedDate(food.getCreatedDate());
         foodDto.setRestaurantId(food.getRestaurant().getRestaurantId());
