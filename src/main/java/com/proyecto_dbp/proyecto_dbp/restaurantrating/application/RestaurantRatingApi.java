@@ -4,6 +4,7 @@ import com.proyecto_dbp.proyecto_dbp.common.ApiPathConstants;
 import com.proyecto_dbp.proyecto_dbp.restaurantrating.dto.RestaurantRatingCreateDto;
 import com.proyecto_dbp.proyecto_dbp.restaurantrating.dto.RestaurantRatingDto;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,17 +15,17 @@ import java.util.List;
 public interface RestaurantRatingApi {
 
     @PostMapping
-    RestaurantRatingDto createRestaurantRating(@RequestBody RestaurantRatingCreateDto restaurantRatingCreateDto);
+    ResponseEntity<RestaurantRatingDto> createRestaurantRating(@RequestBody RestaurantRatingCreateDto restaurantRatingCreateDto);
 
     @GetMapping("/{id}")
-    RestaurantRatingDto getRestaurantRatingById(@PathVariable Long id);
+    ResponseEntity<RestaurantRatingDto> getRestaurantRatingById(@PathVariable Long id);
 
     @GetMapping
-    List<RestaurantRatingDto> getAllRestaurantRatings();
+    ResponseEntity<List<RestaurantRatingDto>> getAllRestaurantRatings();
 
     @PutMapping("/{id}")
-    RestaurantRatingDto updateRestaurantRating(@PathVariable Long id, @RequestBody RestaurantRatingCreateDto restaurantRatingCreateDto);
+    ResponseEntity<RestaurantRatingDto> updateRestaurantRating(@PathVariable Long id, @RequestBody RestaurantRatingCreateDto restaurantRatingCreateDto);
 
     @DeleteMapping("/{id}")
-    void deleteRestaurantRating(@PathVariable Long id);
+    ResponseEntity<Void> deleteRestaurantRating(@PathVariable Long id);
 }

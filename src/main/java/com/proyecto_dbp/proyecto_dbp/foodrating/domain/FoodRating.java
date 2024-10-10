@@ -1,18 +1,23 @@
 package com.proyecto_dbp.proyecto_dbp.foodrating.domain;
 
-
 import com.proyecto_dbp.proyecto_dbp.food.domain.Food;
 import com.proyecto_dbp.proyecto_dbp.user.domain.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Entity
-@Data  // Lombok generará automáticamente los getters, setters, toString, equals, y hashCode
+@Data
+@Builder
+@NoArgsConstructor  // Constructor sin argumentos generado por Lombok
+@AllArgsConstructor // Constructor con todos los campos generado por Lombok
 public class FoodRating {
 
     @Id
@@ -34,5 +39,4 @@ public class FoodRating {
 
     @ManyToOne
     private User user; // Calificación hecha por un usuario
-
 }

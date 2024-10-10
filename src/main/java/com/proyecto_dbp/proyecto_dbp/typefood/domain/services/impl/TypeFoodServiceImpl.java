@@ -4,7 +4,7 @@ import com.proyecto_dbp.proyecto_dbp.typefood.domain.TypeFood;
 import com.proyecto_dbp.proyecto_dbp.typefood.domain.services.TypeFoodService;
 import com.proyecto_dbp.proyecto_dbp.typefood.dto.TypeFoodDto;
 import com.proyecto_dbp.proyecto_dbp.typefood.infrastructure.TypeFoodRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.Builder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,13 +13,16 @@ import java.util.stream.Collectors;
 @Service
 public class TypeFoodServiceImpl implements TypeFoodService {
 
-    @Autowired
-    private TypeFoodRepository typeFoodRepository;
+    private final TypeFoodRepository typeFoodRepository;
+
+    // Constructor-based injection
+    public TypeFoodServiceImpl(TypeFoodRepository typeFoodRepository) {
+        this.typeFoodRepository = typeFoodRepository;
+    }
 
     @Override
     public TypeFoodDto createTypeFood(TypeFoodDto typeFoodDto) {
-        TypeFood typeFood = new TypeFood();
-        typeFood.setType(typeFoodDto.getType());
+        TypeFood typeFood = mapToEntity(typeFoodDto);
         TypeFood savedTypeFood = typeFoodRepository.save(typeFood);
         return mapToDto(savedTypeFood);
     }
@@ -54,10 +57,18 @@ public class TypeFoodServiceImpl implements TypeFoodService {
         typeFoodRepository.delete(typeFood);
     }
 
+    // Mapping entity to DTO
     private TypeFoodDto mapToDto(TypeFood typeFood) {
-        TypeFoodDto typeFoodDto = new TypeFoodDto();
-        typeFoodDto.setTypeFoodId(typeFood.getTypeFoodId());
-        typeFoodDto.setType(typeFood.getType());
-        return typeFoodDto;
+        return TypeFoodDto.builder()
+                .typeFoodId(typeFood.getTypeFoodId())
+                .type(typeFood.getType())
+                .build();
+    }
+
+    // Mapping DTO to entity
+    private TypeFood mapToEntity(TypeFoodDto typeFoodDto) {
+        return TypeFood.builder()
+                .type(typeFoodDto.getType())
+                .build();
     }
 }

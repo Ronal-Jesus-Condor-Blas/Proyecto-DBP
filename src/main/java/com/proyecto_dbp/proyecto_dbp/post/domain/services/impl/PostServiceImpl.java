@@ -1,6 +1,8 @@
 package com.proyecto_dbp.proyecto_dbp.post.domain.services.impl;
 
 import com.proyecto_dbp.proyecto_dbp.comment.domain.Comment;
+import com.proyecto_dbp.proyecto_dbp.exception.PostNotFoundException;
+import com.proyecto_dbp.proyecto_dbp.exception.UserNotFoundException;
 import com.proyecto_dbp.proyecto_dbp.post.domain.Post;
 import com.proyecto_dbp.proyecto_dbp.post.domain.services.PostService;
 import com.proyecto_dbp.proyecto_dbp.post.dto.PostCreateDto;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class PostServiceImpl implements PostService {
+
     private final PostRepository postRepository;
     private final UserRepository userRepository;
 
@@ -23,7 +26,7 @@ public class PostServiceImpl implements PostService {
     @Override
     public Post getPost(Long postId) {
         return postRepository.findById(postId)
-                .orElseThrow(() -> new RuntimeException("Post not found"));
+                .orElseThrow(() -> new PostNotFoundException("Post not found"));
     }
 
     @Override
@@ -52,7 +55,7 @@ public class PostServiceImpl implements PostService {
     public void likePost(Long postId, Long userId) {
         Post post = getPost(postId);
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
         post.incrementLikes(user);
         postRepository.save(post);
     }
@@ -61,7 +64,7 @@ public class PostServiceImpl implements PostService {
     public void dislikePost(Long postId, Long userId) {
         Post post = getPost(postId);
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
         post.decrementLikes(user);
         postRepository.save(post);
     }
@@ -72,5 +75,4 @@ public class PostServiceImpl implements PostService {
         post.incrementComments(comment);
         postRepository.save(post);
     }
-
 }

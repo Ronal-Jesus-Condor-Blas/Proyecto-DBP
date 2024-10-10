@@ -1,15 +1,13 @@
 package com.proyecto_dbp.proyecto_dbp.restaurantrating.domain.services.impl;
 
-import com.proyecto_dbp.proyecto_dbp.restaurant.domain.Restaurant;
+import com.proyecto_dbp.proyecto_dbp.exception.EntityNotFoundException;
 import com.proyecto_dbp.proyecto_dbp.restaurantrating.domain.RestaurantRating;
 import com.proyecto_dbp.proyecto_dbp.restaurantrating.domain.services.RestaurantRatingService;
 import com.proyecto_dbp.proyecto_dbp.restaurantrating.dto.RestaurantRatingCreateDto;
 import com.proyecto_dbp.proyecto_dbp.restaurantrating.dto.RestaurantRatingDto;
 import com.proyecto_dbp.proyecto_dbp.restaurantrating.infrastructure.RestaurantRatingRepository;
-import com.proyecto_dbp.proyecto_dbp.user.domain.User;
 import com.proyecto_dbp.proyecto_dbp.user.infrastructure.UserRepository;
 import com.proyecto_dbp.proyecto_dbp.restaurant.infrastructure.RestaurantRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -19,25 +17,22 @@ import java.util.stream.Collectors;
 @Service
 public class RestaurantRatingServiceImpl implements RestaurantRatingService {
 
-    @Autowired
-    private RestaurantRatingRepository restaurantRatingRepository;
+    private final RestaurantRatingRepository restaurantRatingRepository;
+    private final UserRepository userRepository;
+    private final RestaurantRepository restaurantRepository;
 
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private RestaurantRepository restaurantRepository;
+    // Inyección de dependencias mediante constructor
+    public RestaurantRatingServiceImpl(RestaurantRatingRepository restaurantRatingRepository,
+                                       UserRepository userRepository,
+                                       RestaurantRepository restaurantRepository) {
+        this.restaurantRatingRepository = restaurantRatingRepository;
+        this.userRepository = userRepository;
+        this.restaurantRepository = restaurantRepository;
+    }
 
     @Override
     public RestaurantRatingDto createRestaurantRating(RestaurantRatingCreateDto restaurantRatingCreateDto) {
-        RestaurantRating restaurantRating = new RestaurantRating();
-        restaurantRating.setRating(restaurantRatingCreateDto.getRating());
-        restaurantRating.setComment(restaurantRatingCreateDto.getComment());
-        restaurantRating.setRatingDate(LocalDateTime.now());
-        restaurantRating.setUser(userRepository.findById(restaurantRatingCreateDto.getUserId())
-                .orElseThrow(() -> new RuntimeException("User not found")));
-        restaurantRating.setRestaurant(restaurantRepository.findById(restaurantRatingCreateDto.getRestaurantId())
-                .orElseThrow(() -> new RuntimeException("Restaurant not found")));
+        RestaurantRating restaurantRating = mapToEntity(restaurantRatingCreateDto);
         RestaurantRating savedRestaurantRating = restaurantRatingRepository.save(restaurantRating);
         return mapToDto(savedRestaurantRating);
     }
@@ -45,7 +40,7 @@ public class RestaurantRatingServiceImpl implements RestaurantRatingService {
     @Override
     public RestaurantRatingDto getRestaurantRatingById(Long id) {
         RestaurantRating restaurantRating = restaurantRatingRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("RestaurantRating not found"));
+                .orElseThrow(() -> new EntityNotFoundException("RestaurantRating not found"));
         return mapToDto(restaurantRating);
     }
 
@@ -59,13 +54,8 @@ public class RestaurantRatingServiceImpl implements RestaurantRatingService {
     @Override
     public RestaurantRatingDto updateRestaurantRating(Long id, RestaurantRatingCreateDto restaurantRatingCreateDto) {
         RestaurantRating restaurantRating = restaurantRatingRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("RestaurantRating not found"));
-        restaurantRating.setRating(restaurantRatingCreateDto.getRating());
-        restaurantRating.setComment(restaurantRatingCreateDto.getComment());
-        restaurantRating.setUser(userRepository.findById(restaurantRatingCreateDto.getUserId())
-                .orElseThrow(() -> new RuntimeException("User not found")));
-        restaurantRating.setRestaurant(restaurantRepository.findById(restaurantRatingCreateDto.getRestaurantId())
-                .orElseThrow(() -> new RuntimeException("Restaurant not found")));
+                .orElseThrow(() -> new EntityNotFoundException("RestaurantRating not found"));
+        updateFields(restaurantRating, restaurantRatingCreateDto);
         RestaurantRating updatedRestaurantRating = restaurantRatingRepository.save(restaurantRating);
         return mapToDto(updatedRestaurantRating);
     }
@@ -73,18 +63,42 @@ public class RestaurantRatingServiceImpl implements RestaurantRatingService {
     @Override
     public void deleteRestaurantRating(Long id) {
         RestaurantRating restaurantRating = restaurantRatingRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("RestaurantRating not found"));
+                .orElseThrow(() -> new EntityNotFoundException("RestaurantRating not found"));
         restaurantRatingRepository.delete(restaurantRating);
     }
 
+    // Mapeo de DTO a entidad
+    private RestaurantRating mapToEntity(RestaurantRatingCreateDto dto) {
+        return RestaurantRating.builder()
+                .rating(dto.getRating())
+                .comment(dto.getComment())
+                .ratingDate(LocalDateTime.now())
+                .user(userRepository.findById(dto.getUserId())
+                        .orElseThrow(() -> new EntityNotFoundException("User not found")))
+                .restaurant(restaurantRepository.findById(dto.getRestaurantId())
+                        .orElseThrow(() -> new EntityNotFoundException("Restaurant not found")))
+                .build();
+    }
+
+    // Mapeo de entidad a DTO
     private RestaurantRatingDto mapToDto(RestaurantRating restaurantRating) {
-        RestaurantRatingDto restaurantRatingDto = new RestaurantRatingDto();
-        restaurantRatingDto.setRestaurantRatingId(restaurantRating.getRestaurantRatingId());
-        restaurantRatingDto.setRating(restaurantRating.getRating());
-        restaurantRatingDto.setRatingDate(restaurantRating.getRatingDate());
-        restaurantRatingDto.setComment(restaurantRating.getComment());
-        restaurantRatingDto.setUserId(restaurantRating.getUser().getUserId());
-        restaurantRatingDto.setRestaurantId(restaurantRating.getRestaurant().getRestaurantId());
-        return restaurantRatingDto;
+        return RestaurantRatingDto.builder()
+                .restaurantRatingId(restaurantRating.getRestaurantRatingId())
+                .rating(restaurantRating.getRating())
+                .comment(restaurantRating.getComment())
+                .ratingDate(restaurantRating.getRatingDate())
+                .userId(restaurantRating.getUser().getUserId())
+                .restaurantId(restaurantRating.getRestaurant().getRestaurantId())
+                .build();
+    }
+
+    // Actualización de campos
+    private void updateFields(RestaurantRating restaurantRating, RestaurantRatingCreateDto dto) {
+        restaurantRating.setRating(dto.getRating());
+        restaurantRating.setComment(dto.getComment());
+        restaurantRating.setUser(userRepository.findById(dto.getUserId())
+                .orElseThrow(() -> new EntityNotFoundException("User not found")));
+        restaurantRating.setRestaurant(restaurantRepository.findById(dto.getRestaurantId())
+                .orElseThrow(() -> new EntityNotFoundException("Restaurant not found")));
     }
 }

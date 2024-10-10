@@ -5,6 +5,7 @@ import com.proyecto_dbp.proyecto_dbp.restaurant.dto.RestaurantCreateDto;
 import com.proyecto_dbp.proyecto_dbp.restaurant.dto.RestaurantDto;
 import com.proyecto_dbp.proyecto_dbp.restaurant.dto.RestaurantUpdateDto;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,17 +16,17 @@ import java.util.List;
 public interface RestaurantApi {
 
     @PostMapping
-    RestaurantDto createRestaurant(@RequestBody RestaurantCreateDto restaurantCreateDto);
+    ResponseEntity<RestaurantDto> createRestaurant(@RequestBody RestaurantCreateDto restaurantCreateDto);
 
     @GetMapping("/{id}")
-    RestaurantDto getRestaurantById(@PathVariable Long id);
+    ResponseEntity<RestaurantDto> getRestaurantById(@PathVariable Long id);
 
     @GetMapping
-    List<RestaurantDto> getAllRestaurants();
+    ResponseEntity<List<RestaurantDto>> getAllRestaurants();
 
     @PutMapping("/{id}")
-    RestaurantDto updateRestaurant(@PathVariable Long id, @RequestBody RestaurantUpdateDto restaurantUpdateDto);
+    ResponseEntity<RestaurantDto> updateRestaurant(@PathVariable Long id, @RequestBody RestaurantUpdateDto restaurantUpdateDto);
 
     @DeleteMapping("/{id}")
-    void deleteRestaurant(@PathVariable Long id);
+    ResponseEntity<Void> deleteRestaurant(@PathVariable Long id);
 }

@@ -1,5 +1,6 @@
 package com.proyecto_dbp.proyecto_dbp.food.domain.services.impl;
 
+import com.proyecto_dbp.proyecto_dbp.exception.EntityNotFoundException;
 import com.proyecto_dbp.proyecto_dbp.food.domain.Food;
 import com.proyecto_dbp.proyecto_dbp.food.domain.FoodStatus;
 import com.proyecto_dbp.proyecto_dbp.food.domain.services.FoodService;
@@ -8,7 +9,6 @@ import com.proyecto_dbp.proyecto_dbp.food.dto.FoodDto;
 import com.proyecto_dbp.proyecto_dbp.food.dto.FoodUpdateDto;
 import com.proyecto_dbp.proyecto_dbp.food.infrastructure.FoodRepository;
 import com.proyecto_dbp.proyecto_dbp.restaurant.infrastructure.RestaurantRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -18,29 +18,27 @@ import java.util.stream.Collectors;
 @Service
 public class FoodServiceImpl implements FoodService {
 
-    @Autowired
-    private FoodRepository foodRepository;
+    private final FoodRepository foodRepository;
+    private final RestaurantRepository restaurantRepository;
 
-    @Autowired
-    private RestaurantRepository restaurantRepository;
+    // Inyección por constructor
+    public FoodServiceImpl(FoodRepository foodRepository, RestaurantRepository restaurantRepository) {
+        this.foodRepository = foodRepository;
+        this.restaurantRepository = restaurantRepository;
+    }
 
     @Override
     public FoodDto createFood(FoodCreateDto foodCreateDto) {
-        Food food = new Food();
-        food.setName(foodCreateDto.getName());
-        food.setPrice(foodCreateDto.getPrice());
-        food.setStatus(FoodStatus.valueOf(foodCreateDto.getStatus()));
-        food.setCreatedDate(LocalDateTime.now());
-        food.setRestaurant(restaurantRepository.findById(foodCreateDto.getRestaurantId())
-                .orElseThrow(() -> new RuntimeException("Restaurant not found")));
+        Food food = mapToEntity(foodCreateDto);
         Food savedFood = foodRepository.save(food);
         return mapToDto(savedFood);
     }
 
+
     @Override
     public FoodDto getFoodById(Long id) {
         Food food = foodRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Food not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Food not found"));
         return mapToDto(food);
     }
 
@@ -54,11 +52,8 @@ public class FoodServiceImpl implements FoodService {
     @Override
     public FoodDto updateFood(Long id, FoodUpdateDto foodUpdateDto) {
         Food food = foodRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Food not found"));
-        food.setName(foodUpdateDto.getName());
-        food.setPrice(foodUpdateDto.getPrice());
-        food.setStatus(FoodStatus.valueOf(foodUpdateDto.getStatus()));
-        food.setAverageRating(foodUpdateDto.getAverageRating());
+                .orElseThrow(() -> new EntityNotFoundException("Food not found"));
+        updateFields(food, foodUpdateDto);
         Food updatedFood = foodRepository.save(food);
         return mapToDto(updatedFood);
     }
@@ -66,19 +61,41 @@ public class FoodServiceImpl implements FoodService {
     @Override
     public void deleteFood(Long id) {
         Food food = foodRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Food not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Food not found"));
         foodRepository.delete(food);
     }
 
+    // Mapeo de entidad a DTO
     private FoodDto mapToDto(Food food) {
-        FoodDto foodDto = new FoodDto();
-        foodDto.setFoodId(food.getFoodId());
-        foodDto.setName(food.getName());
-        foodDto.setPrice(food.getPrice());
-        foodDto.setStatus(String.valueOf(food.getStatus()));
-        foodDto.setAverageRating(food.getAverageRating());
-        foodDto.setCreatedDate(food.getCreatedDate());
-        foodDto.setRestaurantId(food.getRestaurant().getRestaurantId());
-        return foodDto;
+        return FoodDto.builder()
+                .foodId(food.getFoodId())
+                .name(food.getName())
+                .price(food.getPrice())
+                .status(food.getStatus().name())  // Convertir Enum a String
+                .averageRating(food.getAverageRating())
+                .createdDate(food.getCreatedDate())
+                .restaurantId(food.getRestaurant().getRestaurantId())
+                .build();
+    }
+
+
+    // Mapeo de DTO a entidad
+    private Food mapToEntity(FoodCreateDto foodCreateDto) {
+        return Food.builder()
+                .name(foodCreateDto.getName())
+                .price(foodCreateDto.getPrice())
+                .status(FoodStatus.valueOf(foodCreateDto.getStatus()))
+                .createdDate(LocalDateTime.now())
+                .restaurant(restaurantRepository.findById(foodCreateDto.getRestaurantId())
+                        .orElseThrow(() -> new EntityNotFoundException("Restaurant not found")))
+                .build();
+    }
+
+    // Actualización de campos
+    private void updateFields(Food food, FoodUpdateDto foodUpdateDto) {
+        food.setName(foodUpdateDto.getName());
+        food.setPrice(foodUpdateDto.getPrice());
+        food.setStatus(FoodStatus.valueOf(foodUpdateDto.getStatus()));
+        food.setAverageRating(foodUpdateDto.getAverageRating());
     }
 }

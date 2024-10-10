@@ -4,7 +4,7 @@ import com.proyecto_dbp.proyecto_dbp.restaurantrating.application.RestaurantRati
 import com.proyecto_dbp.proyecto_dbp.restaurantrating.domain.services.RestaurantRatingService;
 import com.proyecto_dbp.proyecto_dbp.restaurantrating.dto.RestaurantRatingCreateDto;
 import com.proyecto_dbp.proyecto_dbp.restaurantrating.dto.RestaurantRatingDto;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -12,31 +12,36 @@ import java.util.List;
 @RestController
 public class RestaurantRatingController implements RestaurantRatingApi {
 
-    @Autowired
-    private RestaurantRatingService restaurantRatingService;
+    private final RestaurantRatingService restaurantRatingService;
 
-    @Override
-    public RestaurantRatingDto createRestaurantRating(RestaurantRatingCreateDto restaurantRatingCreateDto) {
-        return restaurantRatingService.createRestaurantRating(restaurantRatingCreateDto);
+    // Constructor con inyección de dependencias
+    public RestaurantRatingController(RestaurantRatingService restaurantRatingService) {
+        this.restaurantRatingService = restaurantRatingService;
     }
 
     @Override
-    public RestaurantRatingDto getRestaurantRatingById(Long id) {
-        return restaurantRatingService.getRestaurantRatingById(id);
+    public ResponseEntity<RestaurantRatingDto> createRestaurantRating(RestaurantRatingCreateDto restaurantRatingCreateDto) {
+        return ResponseEntity.ok(restaurantRatingService.createRestaurantRating(restaurantRatingCreateDto));
     }
 
     @Override
-    public List<RestaurantRatingDto> getAllRestaurantRatings() {
-        return restaurantRatingService.getAllRestaurantRatings();
+    public ResponseEntity<RestaurantRatingDto> getRestaurantRatingById(Long id) {
+        return ResponseEntity.ok(restaurantRatingService.getRestaurantRatingById(id));
     }
 
     @Override
-    public RestaurantRatingDto updateRestaurantRating(Long id, RestaurantRatingCreateDto restaurantRatingCreateDto) {
-        return restaurantRatingService.updateRestaurantRating(id, restaurantRatingCreateDto);
+    public ResponseEntity<List<RestaurantRatingDto>> getAllRestaurantRatings() {
+        return ResponseEntity.ok(restaurantRatingService.getAllRestaurantRatings());
     }
 
     @Override
-    public void deleteRestaurantRating(Long id) {
+    public ResponseEntity<RestaurantRatingDto> updateRestaurantRating(Long id, RestaurantRatingCreateDto restaurantRatingCreateDto) {
+        return ResponseEntity.ok(restaurantRatingService.updateRestaurantRating(id, restaurantRatingCreateDto));
+    }
+
+    @Override
+    public ResponseEntity<Void> deleteRestaurantRating(Long id) {
         restaurantRatingService.deleteRestaurantRating(id);
+        return ResponseEntity.noContent().build();  // Retorna 204 No Content
     }
 }

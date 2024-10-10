@@ -13,7 +13,5 @@ public interface PostService {
     void createPost(PostCreateDto postCreateDto);
     void likePost(Long postId, Long userId);
     void dislikePost(Long postId, Long userId);
-
-
     void commentPost(Long postId, Comment comment);
 }

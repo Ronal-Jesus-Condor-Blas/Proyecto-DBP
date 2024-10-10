@@ -1,10 +1,12 @@
 package com.proyecto_dbp.proyecto_dbp.food.dto;
 
+import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDateTime;
 
 @Data
+@Builder
 public class FoodDto {
     private Long foodId;
     private String name;

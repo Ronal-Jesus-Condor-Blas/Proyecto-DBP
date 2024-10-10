@@ -5,7 +5,7 @@ import com.proyecto_dbp.proyecto_dbp.food.domain.services.FoodService;
 import com.proyecto_dbp.proyecto_dbp.food.dto.FoodCreateDto;
 import com.proyecto_dbp.proyecto_dbp.food.dto.FoodDto;
 import com.proyecto_dbp.proyecto_dbp.food.dto.FoodUpdateDto;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -13,31 +13,36 @@ import java.util.List;
 @RestController
 public class FoodController implements FoodApi {
 
-    @Autowired
-    private FoodService foodService;
+    private final FoodService foodService;
 
-    @Override
-    public FoodDto createFood(FoodCreateDto foodCreateDto) {
-        return foodService.createFood(foodCreateDto);
+    // Inyección por constructor (mejor práctica)
+    public FoodController(FoodService foodService) {
+        this.foodService = foodService;
     }
 
     @Override
-    public FoodDto getFoodById(Long id) {
-        return foodService.getFoodById(id);
+    public ResponseEntity<FoodDto> createFood(FoodCreateDto foodCreateDto) {
+        return ResponseEntity.ok(foodService.createFood(foodCreateDto));
     }
 
     @Override
-    public List<FoodDto> getAllFoods() {
-        return foodService.getAllFoods();
+    public ResponseEntity<FoodDto> getFoodById(Long id) {
+        return ResponseEntity.ok(foodService.getFoodById(id));
     }
 
     @Override
-    public FoodDto updateFood(Long id, FoodUpdateDto foodUpdateDto) {
-        return foodService.updateFood(id, foodUpdateDto);
+    public ResponseEntity<List<FoodDto>> getAllFoods() {
+        return ResponseEntity.ok(foodService.getAllFoods());
     }
 
     @Override
-    public void deleteFood(Long id) {
+    public ResponseEntity<FoodDto> updateFood(Long id, FoodUpdateDto foodUpdateDto) {
+        return ResponseEntity.ok(foodService.updateFood(id, foodUpdateDto));
+    }
+
+    @Override
+    public ResponseEntity<Void> deleteFood(Long id) {
         foodService.deleteFood(id);
+        return ResponseEntity.noContent().build(); // 204 No Content después de eliminar
     }
 }

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class PostController implements PostApi {
+
     private final PostService postService;
 
     public PostController(PostService postService) {

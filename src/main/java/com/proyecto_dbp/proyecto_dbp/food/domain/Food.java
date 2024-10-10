@@ -5,13 +5,19 @@ import com.proyecto_dbp.proyecto_dbp.restaurant.domain.Restaurant;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Data  // Lombok genera automáticamente getters, setters, toString, equals, y hashCode
+@Data
+@Builder  // Añadimos el soporte para el patrón Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Food {
 
     @Id

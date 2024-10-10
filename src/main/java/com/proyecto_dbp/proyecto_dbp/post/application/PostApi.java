@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @SecurityRequirement(name = "Bearer Authentication")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public interface PostApi {
+
     @GetMapping
     ResponseEntity<Post> getPost(
             @RequestAttribute("X-Post-Id") Long postId
@@ -49,6 +50,4 @@ public interface PostApi {
 
     @PutMapping("/comment")
     ResponseEntity<Void> commentPost(Long postId, Comment comment);
-
-
 }

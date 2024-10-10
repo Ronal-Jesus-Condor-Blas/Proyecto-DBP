@@ -3,7 +3,10 @@ package com.proyecto_dbp.proyecto_dbp.post.domain;
 import com.proyecto_dbp.proyecto_dbp.comment.domain.Comment;
 import com.proyecto_dbp.proyecto_dbp.user.domain.User;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -11,6 +14,9 @@ import java.util.Set;
 
 @Entity
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Post {
 
     @Id
@@ -38,7 +44,7 @@ public class Post {
     private PostStatus status;  // Estado del post (activo/eliminado)
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
-    private Set<Comment> comments;  // Un post puede tener muchos comentarios
+    private Set<Comment> comments = new HashSet<>();  // Un post puede tener muchos comentarios
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(

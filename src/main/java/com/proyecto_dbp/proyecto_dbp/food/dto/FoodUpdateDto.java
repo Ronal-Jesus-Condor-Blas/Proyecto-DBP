@@ -1,7 +1,8 @@
 package com.proyecto_dbp.proyecto_dbp.food.dto;
 
+import lombok.Builder;
 import lombok.Data;
-
+@Builder
 @Data
 public class FoodUpdateDto {
     private String name;

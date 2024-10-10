@@ -1,51 +1,57 @@
 package com.proyecto_dbp.proyecto_dbp.restaurant.domain;
+
 import com.proyecto_dbp.proyecto_dbp.food.domain.Food;
 import com.proyecto_dbp.proyecto_dbp.restaurantrating.domain.RestaurantRating;
 import com.proyecto_dbp.proyecto_dbp.typefood.domain.TypeFood;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Set;
 
 @Entity
-@Data  // Lombok generará automáticamente los getters, setters, toString, equals, y hashCode
+@Data
+@Builder  // Para permitir el patrón de construcción
+@NoArgsConstructor  // Constructor sin argumentos
+@AllArgsConstructor  // Constructor con todos los argumentos
 public class Restaurant {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long restaurantId; // Identificador único del restaurante
+    private Long restaurantId;
 
     @NotNull
     @Size(max = 100)
-    private String name; // Nombre del restaurante
+    private String name;
 
     @NotNull
-    private String location; // Ubicación del restaurante
+    private String location;
 
-    private Double averageRating; // Calificación promedio del restaurante
+    private Double averageRating;
 
-    private LocalDateTime createdDate; // Fecha de creación del restaurante
+    private LocalDateTime createdDate;
 
-    private LocalTime openingTime;  // Hora de apertura
+    private LocalTime openingTime;
 
-    private LocalTime closingTime;  // Hora de cierre
-
-    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
-    private Set<Food> foods;  // Un restaurante ofrece varios platos
+    private LocalTime closingTime;
 
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
-    private Set<RestaurantRating> ratings;  // Un restaurante puede recibir varias calificaciones
+    private Set<Food> foods;
+
+    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
+    private Set<RestaurantRating> ratings;
 
     @ManyToMany
     @JoinTable(
             name = "restaurant_type_food",
             joinColumns = @JoinColumn(name = "restaurant_id"),
             inverseJoinColumns = @JoinColumn(name = "typefood_id")
-    ) // Tabla intermedia para la relación muchos a muchos
-
-    private Set<TypeFood> typesOfFood;  // Un restaurante ofrece varios tipos de cocina
+    )
+    private Set<TypeFood> typesOfFood;
 }

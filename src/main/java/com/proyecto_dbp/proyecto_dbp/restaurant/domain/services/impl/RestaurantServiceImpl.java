@@ -1,12 +1,12 @@
 package com.proyecto_dbp.proyecto_dbp.restaurant.domain.services.impl;
 
+import com.proyecto_dbp.proyecto_dbp.exception.EntityNotFoundException;
 import com.proyecto_dbp.proyecto_dbp.restaurant.domain.Restaurant;
 import com.proyecto_dbp.proyecto_dbp.restaurant.domain.services.RestaurantService;
 import com.proyecto_dbp.proyecto_dbp.restaurant.dto.RestaurantCreateDto;
 import com.proyecto_dbp.proyecto_dbp.restaurant.dto.RestaurantDto;
 import com.proyecto_dbp.proyecto_dbp.restaurant.dto.RestaurantUpdateDto;
 import com.proyecto_dbp.proyecto_dbp.restaurant.infrastructure.RestaurantRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -16,17 +16,16 @@ import java.util.stream.Collectors;
 @Service
 public class RestaurantServiceImpl implements RestaurantService {
 
-    @Autowired
-    private RestaurantRepository restaurantRepository;
+    private final RestaurantRepository restaurantRepository;
+
+    // Inyección de dependencias mediante constructor
+    public RestaurantServiceImpl(RestaurantRepository restaurantRepository) {
+        this.restaurantRepository = restaurantRepository;
+    }
 
     @Override
     public RestaurantDto createRestaurant(RestaurantCreateDto restaurantCreateDto) {
-        Restaurant restaurant = new Restaurant();
-        restaurant.setName(restaurantCreateDto.getName());
-        restaurant.setLocation(restaurantCreateDto.getLocation());
-        restaurant.setOpeningTime(restaurantCreateDto.getOpeningTime());
-        restaurant.setClosingTime(restaurantCreateDto.getClosingTime());
-        restaurant.setCreatedDate(LocalDateTime.now());
+        Restaurant restaurant = mapToEntity(restaurantCreateDto);
         Restaurant savedRestaurant = restaurantRepository.save(restaurant);
         return mapToDto(savedRestaurant);
     }
@@ -34,7 +33,7 @@ public class RestaurantServiceImpl implements RestaurantService {
     @Override
     public RestaurantDto getRestaurantById(Long id) {
         Restaurant restaurant = restaurantRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Restaurant not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Restaurant not found"));
         return mapToDto(restaurant);
     }
 
@@ -48,12 +47,8 @@ public class RestaurantServiceImpl implements RestaurantService {
     @Override
     public RestaurantDto updateRestaurant(Long id, RestaurantUpdateDto restaurantUpdateDto) {
         Restaurant restaurant = restaurantRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Restaurant not found"));
-        restaurant.setName(restaurantUpdateDto.getName());
-        restaurant.setLocation(restaurantUpdateDto.getLocation());
-        restaurant.setAverageRating(restaurantUpdateDto.getAverageRating());
-        restaurant.setOpeningTime(restaurantUpdateDto.getOpeningTime());
-        restaurant.setClosingTime(restaurantUpdateDto.getClosingTime());
+                .orElseThrow(() -> new EntityNotFoundException("Restaurant not found"));
+        updateFields(restaurant, restaurantUpdateDto);
         Restaurant updatedRestaurant = restaurantRepository.save(restaurant);
         return mapToDto(updatedRestaurant);
     }
@@ -61,19 +56,40 @@ public class RestaurantServiceImpl implements RestaurantService {
     @Override
     public void deleteRestaurant(Long id) {
         Restaurant restaurant = restaurantRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Restaurant not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Restaurant not found"));
         restaurantRepository.delete(restaurant);
     }
 
+    // Mapeo de entidad a DTO
     private RestaurantDto mapToDto(Restaurant restaurant) {
-        RestaurantDto restaurantDto = new RestaurantDto();
-        restaurantDto.setRestaurantId(restaurant.getRestaurantId());
-        restaurantDto.setName(restaurant.getName());
-        restaurantDto.setLocation(restaurant.getLocation());
-        restaurantDto.setAverageRating(restaurant.getAverageRating());
-        restaurantDto.setCreatedDate(restaurant.getCreatedDate());
-        restaurantDto.setOpeningTime(restaurant.getOpeningTime());
-        restaurantDto.setClosingTime(restaurant.getClosingTime());
-        return restaurantDto;
+        return RestaurantDto.builder()
+                .restaurantId(restaurant.getRestaurantId())
+                .name(restaurant.getName())
+                .location(restaurant.getLocation())
+                .averageRating(restaurant.getAverageRating())
+                .createdDate(restaurant.getCreatedDate())
+                .openingTime(restaurant.getOpeningTime())
+                .closingTime(restaurant.getClosingTime())
+                .build();
+    }
+
+    // Mapeo de DTO a entidad
+    private Restaurant mapToEntity(RestaurantCreateDto restaurantCreateDto) {
+        return Restaurant.builder()
+                .name(restaurantCreateDto.getName())
+                .location(restaurantCreateDto.getLocation())
+                .openingTime(restaurantCreateDto.getOpeningTime())
+                .closingTime(restaurantCreateDto.getClosingTime())
+                .createdDate(LocalDateTime.now())
+                .build();
+    }
+
+    // Actualización de campos
+    private void updateFields(Restaurant restaurant, RestaurantUpdateDto restaurantUpdateDto) {
+        restaurant.setName(restaurantUpdateDto.getName());
+        restaurant.setLocation(restaurantUpdateDto.getLocation());
+        restaurant.setAverageRating(restaurantUpdateDto.getAverageRating());
+        restaurant.setOpeningTime(restaurantUpdateDto.getOpeningTime());
+        restaurant.setClosingTime(restaurantUpdateDto.getClosingTime());
     }
 }
