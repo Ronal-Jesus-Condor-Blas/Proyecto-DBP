@@ -1,14 +1,13 @@
-server:
-  port: 8080
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/proyecto_dbp
+    url: jdbc:postgresql://localhost:5432/mi_base_de_datos
     username: postgres
-    password: 1234
+    password: mimaridoronal
+    driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
       ddl-auto: update
-  main:
-    allow-circular-references: true
+    show-sql: true
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
 jwt:
-  secret: jsaovcbsahdbocsaubcdihabsocdbaocudsboacbdsciudsboaucibdsaociubsaicbsaoicbosabskhjabvchdsvapdsbcidsb
+  secret: your_secret_key
